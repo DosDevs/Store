@@ -3,7 +3,7 @@ PROJECT_ROOT=..
 
 all: libfront.a store.front
 
-include ../../Makefile.inc
+include ../Makefile.inc
 
 OBJECTS=http-server.o
 

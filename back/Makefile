@@ -2,7 +2,7 @@ PROJECT_ROOT=..
 
 all: libback.a store.back
 
-include ../../Makefile.inc
+include ../Makefile.inc
 
 OBJECTS=shard.o
 
