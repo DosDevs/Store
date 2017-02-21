@@ -1,0 +1,4 @@
+*.o
+*.a
+store.back
+store.front
