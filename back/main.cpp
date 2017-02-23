@@ -49,9 +49,17 @@ class Command
 
 string Command::_empty_string;
 
-void Insert(Command const& command, Shard& shard);
-void Write(Command const& command, Shard& shard);
-void List(Command const& command, Shard& shard);
+using Store::Back::Shard;
+
+struct Record {
+    int ID;
+    string Name;
+    string Description;
+};
+
+void Insert(Command const& command, Shard<Record>& shard);
+void Write(Command const& command, Shard<Record>& shard);
+void List(Command const& command, Shard<Record>& shard);
 
 int main(int argc, char* argv[], char* env[])
 {
@@ -67,7 +75,7 @@ int main(int argc, char* argv[], char* env[])
         return -2;
     }
 
-    Shard shard(argv[1]);
+    Shard<Record> shard(argv[1]);
     
     for(;;) {
         std::cout << "OK ";
@@ -101,7 +109,7 @@ void Command_Usage_Error(string const& command, string const& args = "")
     ERROR << "Usage: " << command << args;
 }
 
-void Insert(Command const& command, Shard& shard)
+void Insert(Command const& command, Shard<Record>& shard)
 {
     if (command.Token_Count() != 3)
         return Command_Usage_Error(command[0], " <key> <value>");
@@ -122,7 +130,7 @@ void Insert(Command const& command, Shard& shard)
         INFO << "Push-over entry with key " << lexical_cast<string>(push_over_key) << " needs a new home.";
 }
 
-void Write(Command const& command, Shard& shard)
+void Write(Command const& command, Shard<Record>& shard)
 {
     if (command.Token_Count() != 1)
         return Command_Usage_Error(command[0]);
@@ -132,7 +140,7 @@ void Write(Command const& command, Shard& shard)
     shard.Write();
 }
 
-void List(Command const& command, Shard& shard)
+void List(Command const& command, Shard<Record>& shard)
 {
     if (command.Token_Count() != 1)
         return Command_Usage_Error(command[0]);

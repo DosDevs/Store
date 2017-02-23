@@ -4,9 +4,9 @@ all: libback.a store.back
 
 include ../Makefile.inc
 
-OBJECTS=shard.o
+OBJECTS=base-shard.o
 
-libback.a: shard.o
+libback.a: $(OBJECTS)
 	ar -r $@ $(OBJECTS)
 
 store.back: main.o libback.a

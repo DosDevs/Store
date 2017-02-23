@@ -10,12 +10,15 @@
 using std::string;
 
 
-Shard::Shard(std::string const& filename):
+using Store::Back::Base_Shard;
+
+
+Base_Shard::Base_Shard(std::string const& filename):
     _filename(filename)
 {}
 
 void
-Shard::Read()
+Base_Shard::Read()
 {
     if (!_cache.empty())
         _cache.clear();
@@ -34,11 +37,11 @@ Shard::Read()
 }
 
 void
-Shard::Insert(
+Base_Shard::Insert(
         uint64_t index,
         string const& row,
         string& old_record,
-        uint64_t push_over_index,
+        uint64_t& push_over_index,
         std::string& push_over_value)
 {
     if (_cache.empty())
@@ -58,8 +61,22 @@ Shard::Insert(
     }
 }
 
+bool
+Base_Shard::Retrieve(
+        uint64_t index,
+        string& row) const
+{
+    auto iter = _cache.find(index);
+
+    if (iter == _cache.end())
+        return false;
+
+    row = iter->second;
+    return true;
+}
+
 void
-Shard::Write()
+Base_Shard::Write()
 {
     std::ofstream stream(_filename);
 
