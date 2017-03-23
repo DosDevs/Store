@@ -51,7 +51,7 @@ string Command::_empty_string;
 
 using Store::Back::Shard;
 
-struct Record {
+struct Record: public Marshall::Record {
     int ID;
     string Name;
     string Description;
@@ -117,11 +117,28 @@ void Insert(Command const& command, Shard<Record>& shard)
     uint64_t key = lexical_cast<uint64_t>(command[1]);
     INFO << "Inserting key: " << lexical_cast<string>(key);
 
+    Record old_record;
     string old_value;
 
     uint64_t push_over_key;
     string push_over_value;
-    shard.Insert(key, command[2], old_value, push_over_key, push_over_value);
+
+    try {
+        shard.Insert(
+            key,
+            Record::Parse(command[2]),
+            old_record,
+            push_over_key,
+            push_over_value);
+    } catch (...) {
+        INFO << "There has been an error parsing the record: " << command[2];
+    }
+
+    try {
+        old_record.As_String(old_value);
+    } catch (...) {
+        INFO << "There has been an error converting record to string.";
+    }
 
     if (!old_value.empty())
         INFO << "Replaced old value: " << old_value;
