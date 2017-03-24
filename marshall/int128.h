@@ -42,6 +42,40 @@ class uint128_t
             return _low;
         }
 
+        bool operator==(uint128_t that) const
+        {
+            return ((this->_high == that._high) && (this->_low == that._low));
+        }
+
+        bool operator!=(uint128_t that) const
+        {
+            return ((this->_high != that._high) || (this->_low != that._low));
+        }
+
+        bool operator<(uint128_t that) const
+        {
+            return ((this->_high < that._high) ||
+                    ((this->_high == that._high) && (this->_low < that._low)));
+        }
+
+        bool operator<=(uint128_t that) const
+        {
+            return ((this->_high <= that._high) ||
+                    ((this->_high == that._high) && (this->_low <= that._low)));
+        }
+
+        bool operator>(uint128_t that) const
+        {
+            return ((this->_high > that._high) ||
+                    ((this->_high == that._high) && (this->_low > that._low)));
+        }
+
+        bool operator>=(uint128_t that) const
+        {
+            return ((this->_high >= that._high) ||
+                    ((this->_high == that._high) && (this->_low >= that._low)));
+        }
+
         uint128_t operator++()
         {
             uint128_t result = (*this);
